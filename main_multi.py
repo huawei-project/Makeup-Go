@@ -6,7 +6,7 @@
 @Github: https://github.com/isLouisHsu
 @E-mail: is.louishsu@foxmail.com
 @Date: 2019-09-14 14:12:52
-@LastEditTime: 2019-09-16 09:43:53
+@LastEditTime: 2019-09-16 09:56:37
 @Update: 
 '''
 import os
@@ -40,9 +40,26 @@ for i, (dirname, (_, [x1, y1, x2, y2], _)) in enumerate(detects.items()):
     for j, filename in enumerate(os.listdir("%s/%s" % (datapath, dirname))):
 
         ## Read imageIn & Crop
-        inputpath = "%s/%s/%s" % (datapath, dirname, filename)
-        imageIn = Image.open(inputpath)
-        imageIn = np.array(imageIn)
+        # ---------------------------------------------------
+        # inputpath = "%s/%s/%s" % (datapath, dirname, filename)
+        # imageIn = Image.open(inputpath)
+        # imageIn = np.array(imageIn)
+
+        # # imageIn = cv2.equalizeHist(imageIn)     # hist
+        # # imageIn = imageIn + 40; imageIn[imageIn < 0] = 0; imageIn[imageIn > 255] = 255
+        
+        # imageIn = np.stack([imageIn, imageIn, imageIn], axis=-1)
+        # ---------------------------------------------------
+        imageCh1 = np.array(Image.open("%s/%s/%s" % (datapath, dirname, "7.jpg" )))
+        imageCh2 = np.array(Image.open("%s/%s/%s" % (datapath, dirname, "12.jpg")))
+        imageCh3 = np.array(Image.open("%s/%s/%s" % (datapath, dirname, "17.jpg")))
+        
+        # imageCh1 = cv2.equalizeHist(imageCh1)     # hist
+        # imageCh2 = cv2.equalizeHist(imageCh2)     # hist
+        # imageCh3 = cv2.equalizeHist(imageCh3)     # hist
+
+        imageIn = np.stack([imageCh1, imageCh2, imageCh3], axis=-1)
+        # ---------------------------------------------------
 
         h, w = imageIn.shape[:2]
         if w > h:
@@ -51,14 +68,8 @@ for i, (dirname, (_, [x1, y1, x2, y2], _)) in enumerate(detects.items()):
         else:
             cy = h // 2
             imageIn = imageIn[cy - w // 2: cy + w // 2, :]
-            
         imageIn = cv2.resize(imageIn, (46*11, 46*11))
 
-        # imageIn = cv2.equalizeHist(imageIn)     # hist
-        # imageIn = imageIn + 40; imageIn[imageIn < 0] = 0; imageIn[imageIn > 255] = 255
-        
-        imageIn = np.stack([imageIn, imageIn, imageIn], axis=-1)
-        
         ## Forward
         X = torch.tensor(np.transpose(imageIn, (2, 0, 1))[np.newaxis]).float().cuda()
         Y = model(X).squeeze(0)
@@ -79,7 +90,7 @@ for i, (dirname, (_, [x1, y1, x2, y2], _)) in enumerate(detects.items()):
         if not os.path.exists(makeupdir):
             os.makedirs(makeupdir)
 
-        # cv2.imshow("input", imageIn); cv2.imshow("output", imageOut); cv2.imshow("makeup", imageMakeup); cv2.waitKey(0)
+        cv2.imshow("input", imageIn[:, :, ::-1]); cv2.imshow("output", imageOut[:, :, ::-1]); cv2.imshow("makeup", imageMakeup[:, :, ::-1]); cv2.waitKey(0)
 
         plt.imsave(outputfile, imageOut)
         plt.imsave(makeupfile, imageMakeup)
