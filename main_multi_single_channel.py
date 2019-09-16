@@ -6,7 +6,7 @@
 @Github: https://github.com/isLouisHsu
 @E-mail: is.louishsu@foxmail.com
 @Date: 2019-09-14 14:12:52
-@LastEditTime: 2019-09-16 10:45:54
+@LastEditTime: 2019-09-16 12:55:43
 @Update: 
 '''
 import os
@@ -45,7 +45,7 @@ for i, (dirname, (_, [x1, y1, x2, y2], _)) in enumerate(detects.items()):
         imageIn = np.array(imageIn)
 
         # imageIn = cv2.equalizeHist(imageIn)     # hist
-        # imageIn = imageIn + 40; imageIn[imageIn < 0] = 0; imageIn[imageIn > 255] = 255
+        imageIn = imageIn + 40; imageIn[imageIn < 0] = 0; imageIn[imageIn > 255] = 255
         
         imageIn = np.stack([imageIn, imageIn, imageIn], axis=-1)
         # ---------------------------------------------------
