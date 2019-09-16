@@ -6,7 +6,7 @@
 @Github: https://github.com/isLouisHsu
 @E-mail: is.louishsu@foxmail.com
 @Date: 2019-09-14 14:12:52
-@LastEditTime: 2019-09-16 09:30:28
+@LastEditTime: 2019-09-16 09:43:53
 @Update: 
 '''
 import os
@@ -54,11 +54,11 @@ for i, (dirname, (_, [x1, y1, x2, y2], _)) in enumerate(detects.items()):
             
         imageIn = cv2.resize(imageIn, (46*11, 46*11))
 
-        imageIn = cv2.equalizeHist(imageIn)     # hist
+        # imageIn = cv2.equalizeHist(imageIn)     # hist
+        # imageIn = imageIn + 40; imageIn[imageIn < 0] = 0; imageIn[imageIn > 255] = 255
+        
         imageIn = np.stack([imageIn, imageIn, imageIn], axis=-1)
         
-        cv2.imshow("", imageIn); cv2.waitKey(0)
-
         ## Forward
         X = torch.tensor(np.transpose(imageIn, (2, 0, 1))[np.newaxis]).float().cuda()
         Y = model(X).squeeze(0)
@@ -78,6 +78,8 @@ for i, (dirname, (_, [x1, y1, x2, y2], _)) in enumerate(detects.items()):
         makeupdir  = '/'.join(makeupfile.split('/')[:-1])
         if not os.path.exists(makeupdir):
             os.makedirs(makeupdir)
+
+        # cv2.imshow("input", imageIn); cv2.imshow("output", imageOut); cv2.imshow("makeup", imageMakeup); cv2.waitKey(0)
 
         plt.imsave(outputfile, imageOut)
         plt.imsave(makeupfile, imageMakeup)
