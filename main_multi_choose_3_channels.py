@@ -6,7 +6,7 @@
 @Github: https://github.com/isLouisHsu
 @E-mail: is.louishsu@foxmail.com
 @Date: 2019-09-14 14:12:52
-@LastEditTime: 2019-09-16 10:47:19
+@LastEditTime: 2019-09-16 11:22:12
 @Update: 
 '''
 import os
@@ -81,11 +81,11 @@ for i, (dirname, (_, [x1, y1, x2, y2], _)) in enumerate(detects.items()):
         imageMakeup[imageMakeup > 255] = 255; imageMakeup[imageMakeup < 0] = 0; imageMakeup = imageMakeup.astype(np.uint8)
 
         ## Save
-        outputfile = "%s/%s/ch3_%s" % (outputpath, dirname, filename)
+        outputfile = "%s/%s/ch_7_12_17.jpg" % (outputpath, dirname)
         outputdir  = '/'.join(outputfile.split('/')[:-1])
         if not os.path.exists(outputdir):
             os.makedirs(outputdir)
-        makeupfile = "%s/%s/ch3_%s" % (makeuppath, dirname, filename)
+        makeupfile = "%s/%s/ch_7_12_17.jpg" % (makeuppath, dirname)
         makeupdir  = '/'.join(makeupfile.split('/')[:-1])
         if not os.path.exists(makeupdir):
             os.makedirs(makeupdir)
@@ -95,3 +95,5 @@ for i, (dirname, (_, [x1, y1, x2, y2], _)) in enumerate(detects.items()):
 
         # cv2.imshow("input", imageIn[:, :, ::-1]); cv2.imshow("output", imageOut[:, :, ::-1]); cv2.imshow("makeup", imageMakeup[:, :, ::-1]); cv2.waitKey(0)
         # cv2.imshow("input", imageIn); cv2.imshow("output", imageOut); cv2.imshow("makeup", imageMakeup); cv2.waitKey(0)
+
+        break
